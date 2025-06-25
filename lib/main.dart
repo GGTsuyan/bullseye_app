@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/auth/login_screen.dart';
-import 'theme/app_theme.dart';
+import 'screens/splash_screen.dart';
+import 'theme/theme_constants.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,19 +22,29 @@ void main() {
     ),
   );
 
-  runApp(const DartTrackerApp());
+  runApp(const BullsEyeApp());
 }
 
-class DartTrackerApp extends StatelessWidget {
-  const DartTrackerApp({super.key});
+class BullsEyeApp extends StatelessWidget {
+  const BullsEyeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dart Tracker',
+      title: 'BullsEye',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      home: const LoginScreen(),
+      theme: ThemeData(
+        primaryColor: ThemeConstants.primaryBlack,
+        scaffoldBackgroundColor: ThemeConstants.primaryWhite,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ThemeConstants.primaryButton,
+        ),
+      ),
+      home: const SplashScreen(), // Start with splash screen which will navigate to Welcome screen
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import '../theme/theme_constants.dart';
 
 class DartTrackingScreen extends StatefulWidget {
   const DartTrackingScreen({Key? key}) : super(key: key);
@@ -63,21 +64,43 @@ class _DartTrackingScreenState extends State<DartTrackingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ThemeConstants.primaryWhite,
       appBar: AppBar(
-        title: const Text('Dart Tracking'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: ThemeConstants.primaryBlack,
+            size: 20,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Track Throw',
+          style: TextStyle(
+            color: ThemeConstants.primaryBlack,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: _errorMessage != null
           ? Center(
               child: Text(
                 _errorMessage!,
-                style: const TextStyle(color: Colors.red),
+                style: const TextStyle(
+                  color: ThemeConstants.primaryBlack,
+                  fontSize: 16,
+                ),
                 textAlign: TextAlign.center,
               ),
             )
           : !_isCameraInitialized
               ? const Center(
                   child: CircularProgressIndicator(
-                    color: Colors.black,
+                    color: ThemeConstants.primaryBlack,
                   ),
                 )
               : Column(
@@ -86,47 +109,93 @@ class _DartTrackingScreenState extends State<DartTrackingScreen> {
                       child: Stack(
                         children: [
                           CameraPreview(_controller!),
-                          // Overlay for round and throw information
+                          // Round and throw information overlay
                           Positioned(
                             top: 20,
                             left: 20,
                             child: Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(8),
+                                color: ThemeConstants.primaryBlack.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Round: $_currentRound',
+                                    'Round $_currentRound',
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: ThemeConstants.primaryWhite,
                                       fontSize: 16,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Throw: $_currentThrow',
+                                    'Throw $_currentThrow',
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: ThemeConstants.primaryWhite,
                                       fontSize: 16,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
+                          // Tracking status indicator
+                          if (_isTracking)
+                            Positioned(
+                              top: 20,
+                              right: 20,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: ThemeConstants.primaryBlack,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text(
+                                      'Recording',
+                                      style: TextStyle(
+                                        color: ThemeConstants.primaryWhite,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(24),
                       decoration: const BoxDecoration(
-                        color: Colors.white,
+                        color: ThemeConstants.primaryWhite,
                         border: Border(
-                          top: BorderSide(color: Colors.black, width: 1),
+                          top: BorderSide(
+                            color: Color(0xFFEEEEEE),
+                            width: 1,
+                          ),
                         ),
                       ),
                       child: Column(
@@ -138,10 +207,22 @@ class _DartTrackingScreenState extends State<DartTrackingScreen> {
                                 child: ElevatedButton(
                                   onPressed: _toggleTracking,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: _isTracking ? Colors.red : Colors.black,
+                                    backgroundColor: _isTracking
+                                        ? Colors.red
+                                        : ThemeConstants.primaryBlack,
+                                    foregroundColor: ThemeConstants.primaryWhite,
+                                    minimumSize: const Size(double.infinity, 48),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    elevation: 0,
                                   ),
                                   child: Text(
                                     _isTracking ? 'Stop Tracking' : 'Start Tracking',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -149,18 +230,17 @@ class _DartTrackingScreenState extends State<DartTrackingScreen> {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: _nextThrow,
-                                  child: const Text('Next Throw'),
+                                  style: ThemeConstants.secondaryButton,
+                                  child: const Text(
+                                    'Next Throw',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            _isTracking ? 'Tracking Active' : 'Tracking Inactive',
-                            style: TextStyle(
-                              color: _isTracking ? Colors.red : Colors.grey,
-                              fontWeight: FontWeight.bold,
-                            ),
                           ),
                         ],
                       ),

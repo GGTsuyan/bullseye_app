@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme/theme_constants.dart';
 import 'settings_screen.dart';
 import 'statistics_screen.dart';
 import 'dart_tracking_screen.dart';
+import 'player_profile_summary.dart';
+import '../models/player_state.dart';
+import 'player_profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,42 +16,64 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Home',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+        child: Consumer<PlayerState>(
+          builder: (context, playerState, _) {
+            final playerProfile = playerState.playerProfile;
+            return Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Home',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PlayerProfileScreen(
+                            playerProfile: playerProfile,
+                            onProfileUpdated: (updatedProfile) {
+                              playerState.updatePlayerProfile(updatedProfile);
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    child: PlayerProfileSummary(playerProfile: playerProfile),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildCard(
+                    icon: Icons.info_outline,
+                    title: 'Tips & Tricks',
+                    description: 'Learn how to improve your game',
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 16),
+                  _buildCard(
+                    icon: Icons.play_circle_outline,
+                    title: 'New Game',
+                    description: 'Start tracking your darts',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const DartTrackingScreen()),
+                      );
+                    },
+                  ),
+                  const Spacer(),
+                  _buildBottomNav(context),
+                ],
               ),
-              const SizedBox(height: 32),
-              _buildCard(
-                icon: Icons.info_outline,
-                title: 'Tips & Tricks',
-                description: 'Learn how to improve your game',
-                onTap: () {},
-              ),
-              const SizedBox(height: 16),
-              _buildCard(
-                icon: Icons.play_circle_outline,
-                title: 'New Game',
-                description: 'Start tracking your darts',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const DartTrackingScreen()),
-                  );
-                },
-              ),
-              const Spacer(),
-              _buildBottomNav(context),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

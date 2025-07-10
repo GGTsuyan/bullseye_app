@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'screens/splash_screen.dart';
 import 'theme/theme_constants.dart';
+import 'models/player_state.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +24,12 @@ void main() {
     ),
   );
 
-  runApp(const BullsEyeApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => PlayerState(),
+      child: const BullsEyeApp(),
+    ),
+  );
 }
 
 class BullsEyeApp extends StatelessWidget {

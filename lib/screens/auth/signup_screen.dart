@@ -3,13 +3,49 @@ import '../../theme/theme_constants.dart';
 import 'email_verification_screen.dart';
 import 'login_screen.dart';
 
-class SignupScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../theme/theme_constants.dart';
+import 'email_verification_screen.dart';
+import 'login_screen.dart';
+import '../../models/player_state.dart';
+
+class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final emailController = TextEditingController();
+  State<SignupScreen> createState() => _SignupScreenState();
+}
 
+class _SignupScreenState extends State<SignupScreen> {
+  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    usernameController.dispose();
+    super.dispose();
+  }
+
+  void _onContinue() {
+    final playerState = Provider.of<PlayerState>(context, listen: false);
+    final username = usernameController.text.trim();
+    if (username.isNotEmpty) {
+      playerState.updatePlayerName(username);
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EmailVerificationScreen(
+          email: emailController.text,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ThemeConstants.primaryWhite,
       appBar: AppBar(
@@ -49,6 +85,7 @@ class SignupScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               TextField(
+                controller: usernameController,
                 decoration: ThemeConstants.inputDecoration('Username'),
               ),
               const SizedBox(height: 16),
@@ -64,16 +101,7 @@ class SignupScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EmailVerificationScreen(
-                        email: emailController.text,
-                      ),
-                    ),
-                  );
-                },
+                onPressed: _onContinue,
                 style: ThemeConstants.primaryButton,
                 child: const Text('Continue'),
               ),
@@ -118,19 +146,23 @@ class SignupScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  final playerState = Provider.of<PlayerState>(context, listen: false);
+                  playerState.updatePlayerName('Guest');
+                  Navigator.pushReplacementNamed(context, '/home');
+                },
                 style: ThemeConstants.secondaryButton,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      'assets/apple.png',
-                      height: 24,
-                      width: 24,
+                    Icon(
+                      Icons.person_outline,
+                      size: 24,
+                      color: ThemeConstants.primaryBlack,
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Continue with Apple',
+                      'Continue as Guest',
                       style: ThemeConstants.buttonText.copyWith(
                         color: ThemeConstants.primaryBlack,
                       ),

@@ -111,7 +111,22 @@ class _DartTrackingScreenState extends State<DartTrackingScreen> {
             onPressed: () {
               Navigator.pop(context);
               _gameState.endTurn();
-              setState(() {});
+
+              // Save game history to player profile
+              final newGameHistory = _gameState.toGameHistory();
+              final List<GameHistory> updatedGameHistoryList = List<GameHistory>.from(_playerProfile.gameHistory)
+                ..add(newGameHistory);
+              final updatedProfile = _playerProfile.copyWith(
+                gameHistory: updatedGameHistoryList,
+              );
+
+              // Update player profile in state
+              final playerState = Provider.of<PlayerState>(context, listen: false);
+              playerState.updatePlayerProfile(updatedProfile);
+
+              setState(() {
+                _playerProfile = updatedProfile;
+              });
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFD4AF37),

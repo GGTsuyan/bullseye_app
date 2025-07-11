@@ -1,3 +1,5 @@
+import 'player_profile.dart';
+
 class GameState {
   String playerName;
   int currentScore;
@@ -56,6 +58,20 @@ class GameState {
 
   void endTurn() {
     // Logic for ending current turn
+  }
+
+  GameHistory toGameHistory() {
+    return GameHistory(
+      gameId: DateTime.now().millisecondsSinceEpoch.toString(),
+      date: DateTime.now(),
+      gameType: '501', // Assuming standard game type, adjust as needed
+      isWin: legsWon > (totalLegs / 2),
+      finalScore: currentScore,
+      totalTurns: turns.length,
+      gameAverage: average,
+      turnScores: turns.map((turn) => turn.totalScore).toList(),
+      gameDuration: Duration(minutes: 0), // Placeholder, update if duration tracking is added
+    );
   }
 
   GameState copyWith({

@@ -32,6 +32,14 @@ void main() {
   );
 }
 
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializedApp();
+
+  runApp(const MyApp());
+}
+
 class BullsEyeApp extends StatelessWidget {
   const BullsEyeApp({super.key});
 

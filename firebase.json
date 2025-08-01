@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"bullseye-setup","appId":"1:682320834096:android:71c8b88c3c04627dc607f5","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"bullseye-setup","configurations":{"android":"1:682320834096:android:71c8b88c3c04627dc607f5","ios":"1:682320834096:ios:97213ff2d9bb622ac607f5"}}}}}}

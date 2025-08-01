@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -5,8 +7,11 @@ import 'screens/splash_screen.dart';
 import 'theme/theme_constants.dart';
 import 'models/player_state.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Force portrait mode
   SystemChrome.setPreferredOrientations([
@@ -32,13 +37,7 @@ void main() {
   );
 }
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializedApp();
-
-  runApp(const MyApp());
-}
 
 class BullsEyeApp extends StatelessWidget {
   const BullsEyeApp({super.key});
